@@ -5,5 +5,5 @@ Serves as a shortcut to access exam notes, including information about specific 
 install.packages("devtools")
 
 # Install Myfirstpackage from GitHub
-devtools::install_github("your-username/Myfirstpackage")
+devtools::install_github("aprilflora184/Myfirstpackage")
 
