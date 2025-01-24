@@ -512,10 +512,14 @@ ggplot(results_df, aes(x = Sequences)) +
   )
 
 #Radv2
+#install and load necessary packages
+install.packages("devtools")
+library(devtools)
+install_github("aprilflora184/Myfirstpackage")
+library(Myfirstpackage)
 
-setwd("C:/Users/april/OneDrive/Documents/8 - r_course/week_3/Myfirstpackage")
-devtools::document()  # Generate documentation
-devtools::install()   # Install the package locally
-
-
+#call the three functions that contain exam notes divided roughly by week
+exam_notes1()
+exam_notes2()
+exam_notes3()
 
