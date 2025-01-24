@@ -1,0 +1,521 @@
+#R1
+meryls_oscars = 3
+meryls_losses = 18
+best_actress = "Meryl Streep"
+
+#add the comparison symbol ("=="), add curly brackets, add the print function,
+#make the equation "+ 1" instead of "+= 1"
+
+if (best_actress == "Meryl Streep"){
+  print(meryls_oscars + 1)
+  }else{
+  print(meryls_losses + 1)}
+
+
+#R2
+box_hist <- function (vec){
+  if (!is.numeric(vec)){
+    stop ("The vector must be numeric")
+  }
+   random_plot <- sample(c("boxplot", "histogram"), size = 1)
+   if (random_plot == "boxplot"){
+     boxplot(vec)
+   }else{
+     hist(vec)}
+}
+
+
+#R3 - COME BACK TO THIS ONE!!!!
+box_hist <- function(vec){
+  if (!is.numeric(vec)){
+    stop ("The vector must be numeric")
+  }
+  random_plot <- sample(c("boxplot", "histogram"), size = 1)
+  ifelse(random_plot == "boxplot", boxplot(vec), hist(vec))
+}
+
+
+#R4
+#I reordered the code from most specific to more general, used print() to display
+#the output of the code, and created the value "consequence" to avoid hard-coding
+
+predicted <- "rain"
+actual <- "rain"
+employee_salary <- 54000
+consequence <- 500
+
+if (actual == "sun") {
+  print("Yay! Birthday moved outside!")
+} else if (actual == "high wind") {
+  print("Boss blew off her bike into a canal.")
+} else if (predicted != actual) {
+  print(employee_salary - consequence)
+} else if (predicted == actual) {
+  print(employee_salary + consequence)
+}
+
+
+#R5
+#the original code did not check if any of my_numbers were less than 0 but
+#the condition checked whether each value in the vector was true or false
+#whereas a condition should only have one true or false value
+
+#updated code
+my_numbers <-  runif(100, min=-0.01, max=100)
+any_negative <- FALSE
+
+if (any(my_numbers < 0)) {
+  any_negative <- TRUE
+}
+print(any_negative)
+
+
+#R6
+#create a variable that encodes the time on the computer numerically, including
+#hours and minutes (24-hour system). Create numeric variables for 12am and 5am
+time <- as.numeric(format(Sys.time(), "%H.%M"))
+midnight <- 00.00
+five_am <- 05.00
+
+#set the condition of the time being between midnight and 5am
+if (time >= midnight && time <= five_am){
+  print("Go to sleep!")
+}
+
+
+#R7
+library(dplyr)
+library(tidyverse)
+
+#download the csv file
+df <- read.csv("https://raw.githubusercontent.com/hannesrosenbusch/schiphol_class/master/Kaggle_Dataset_Mental_Disorders.csv")
+
+#convert the "Authority.Respect" column to numeric values and create a new column
+#for them
+df <- df %>%
+  mutate(
+    Authority_Numeric = ifelse(Authority.Respect == "YES", 1, 0)
+  )
+
+#create the variable for the new scale, Narcissism
+df <- df %>%
+  mutate(
+    Narcissism = 0.6 * Euphoric + 0.7 * Authority_Numeric + 0.5 * Sleep.dissorder
+  )
+
+#define outliers based on a cut-off value for Narcissism, > 2.5
+df <- df %>%
+  mutate(
+    Outlying = ifelse(Narcissism > 2.8, TRUE, FALSE)
+  )
+
+#view the dataframe
+print(df)
+
+
+#R8
+#first for loop
+
+#iterate over column names, set the condition for skipping the column "Sexual.Activity",
+#use next to skip the rest of the loop
+for (col_name in names(df)){
+  if (col_name == "Sexual.Activity"){
+    print("Private information")
+    next
+  }
+  #print the datatype of the current column
+  print(paste(col_name, "is of type", class(df[[col_name]])))
+}
+
+#second for loop
+
+#iterate over rows and index the desired data from the rows
+for (i in 1:nrow(df)){
+  patient_number <- df$Patient.Number[i]
+  authority_respect <- df$Authority.Respect[i]
+  aggressive_response <- df$Aggressive.Response[i]
+
+  #set the conditions for which loops to exit out of and which ones to execute
+  if (authority_respect == "NO" && aggressive_response == "YES") {
+    print(paste("Patient", patient_number, ": Assessment postponed"))
+    {break}
+  } else {
+    print(paste("Patient", patient_number, ": assessed successfully"))
+  }
+}
+
+
+#R9
+library(ggplot2)
+
+#define a vector to fill
+survivor_footprints <- c()
+
+#define the parameters for the survivors
+mean <- 100
+sd <- 15
+threshold <- 120
+
+#generate CO2 footprint values until we have 1000 survivors, generate a random
+#CO2 footprint from a normal distribution, check if the footprint is less than
+#or equal to the threshold, and if so, add it to the list of survivor footprints
+while (length(survivor_footprints) <= 1000){
+  random_survivor <- rnorm(1, mean = mean, sd = sd)
+  if (random_survivor <= threshold){
+    survivor_footprints <- c(survivor_footprints, random_survivor)
+  }
+}
+
+#create a dataframe with the survivor footprints
+footprint_df <- data.frame(co2_Footprint = survivor_footprints)
+
+#create a histogram with the survivor footprints
+ggplot(footprint_df, aes(x = co2_Footprint)) +
+          geom_histogram() +
+          labs(title = "1000 survivors",
+               x = "co2 values",
+               y = "count")
+
+
+#R10
+#create a vector with the first two values and set the desired length
+weird_fibonacci <- c(0, 3)
+n <- 10
+
+#for each index in the vector until the 10th, subtract 1 from the index of the previous
+#number, and add it to 3x the index of the number before the previous number
+for (i in 1:n){
+  new_number <- weird_fibonacci[i - 1] + 3 * weird_fibonacci[i - 2]
+  print(new_number)
+  weird_fibonacci <- c(weird_fibonacci, new_number)
+}
+
+#R11
+#define game name and create a welcome message
+game_name <- "Rolling House"
+print(paste("Welcome to", game_name))
+
+#define the parameters
+number_games <- 1000
+current_game <- 1
+house_balance <- 0
+
+  #simulate each game by rolling two dice, calculating their sum, and increasing
+  #the game counter until the last game
+  while (current_game <= number_games){
+    dice <- sample(1:6, size = 2, replace = TRUE)
+    dice_sum <- sum(dice)
+    current_game <- current_game + 1
+
+    #set the conditions, where the player wins $3 if the sum of the dice is 9 or 11,
+    #or $2 if they roll two of the same numbers, and the house wins $2 if they
+    #roll anything else
+    if (dice_sum == 9 || dice_sum == 11){
+      house_balance <- house_balance - 3
+    }else if (dice[1] == dice[2]){
+        house_balance <- house_balance - 2
+        }else{
+          house_balance <- house_balance + 2
+          }
+        }
+
+     #calculate the the payoff per game
+     house_payoff <- house_balance / number_games
+
+
+#R12
+#create the vector of numbers and an empty vector
+these_numbers <- c(1, 3.1, 5.2, -1, 5.2)
+maximum <- numeric()
+
+#check how many elements in these_numbers are greater than the current element. If
+#no elements are greater (sum == 0), then the element is a maximum value
+for (i in 1:length(these_numbers) ) {
+  if (sum(these_numbers > these_numbers[i]) == 0) {
+    maximum <- c(maximum, these_numbers[i])
+  }
+}
+
+
+#R13 - CHECK IF THIS IS STOPPING PROPERLY (BEFORE 2040) !!!!
+#convert Sys.time to a numeric variable to compare it to 2040, paste a message
+#alongside the time, and ensure the system sleeps for 30 minutes between messages
+while (as.numeric(format(Sys.time(), "%Y")) < 2040){
+  print(paste("The time is now", Sys.time()))
+  Sys.sleep(30 * 60)
+}
+
+
+#R14
+#move the global variables out of the function
+rabbits <- c(.001)
+rate <- 2
+capacity <- 1000
+
+#add curly bracket, separate the function arguments from the function body, and
+#the loop header from the loop body
+verhulst <- function (x, rate_in, cap){
+  rate_in*x*(cap-x)/cap
+  for (time in 2:50)
+    rabbits[time] <- verhulst(rabbits[time-1], rate, capacity)
+  plot(rabbits, type='l', xlab='time', bty='n')
+}
+
+
+#R15
+#create an array with 4 rows, 50 columns, and 3 layers, filled with the value 0
+my_array <- array(0, dim = c(4, 50, 3))
+
+#loop through columns, generate 12 random numbers per column element (4 rows *
+#3 slices), and assign a 4 × 3 matrix of random numbers to all the rows and layers
+#for column i
+for (i in 1:50){
+  random_numbers <- rnorm(12, mean = i, sd = 1)
+  my_array[, i, ] <- matrix(random_numbers, nrow = 4, ncol = 3)
+}
+
+
+#R16
+#my 3d array from R15
+my_array <- array(0, dim = c(4, 50, 3))
+
+for (i in 1:50){
+  random_numbers <- rnorm(12, mean = i, sd = 1)
+  my_array[, i, ] <- matrix(random_numbers, nrow = 4, ncol = 3)
+}
+
+#calculating minimum values
+
+#calculate the minimum value across the 4 layers (first dimension) of the array
+apply(my_array, 1, min)
+
+
+#R17
+#copy code block
+caught_fish <- "carp"
+
+what_do <- switch (caught_fish,
+                  large_trout = "eat",
+                  small_trout = "return",
+                  carp = ,
+                  perch = "sell")
+print(what_do)
+
+#(a) When caught_fish is "shoe", it will be "NULL" because "shoe" does not match
+#any of the names specified in the switch() function (large_trout, small_trout,
+#carp, and perch)
+
+#(b) The strings caught_fish can be so that what_do is "sell" are "carp" and "perch."
+#For "perch" this is because that is the action associated with it, and for "carp"
+#it is because no action is specified for "carp," so the function keeps searching
+#for an option that does have an action specified, and the next one happens to be "perch",
+#which as mentioned is tied to "sell."
+
+
+#R18
+#copy code block
+mcfly <- function (my_list) {
+  print("Great Scott! Erased from existence!")
+  rm(list = my_list, pos = 1)
+}
+mcfly('mcfly')
+
+# This code shows us that rm() removes objects from the environment specified.
+# When pos = 1, it removes the objects from the global environment
+
+
+#R19
+#copy code block
+t_tests <- replicate(100, t.test(rbeta(10, shape1=2, shape2=2), mu=.5), simplify = FALSE)
+
+#for each "t.test" object within the list, sapply() should extract the "p.value"
+#attribute using an anonymous function
+p_values <- sapply(t_tests, function(x) x$p.value)
+
+
+#R20
+#comments are on the right of the lines of code
+subtract_all <- function(vec, na.rm = TRUE){ #ensure only numeric arguments are allowed
+  if (!is.numeric(vec)){
+    stop ("only numeric values!")
+  }
+  if (sum(is.na(vec)) > 0) { #ensure users are aware of NA's
+    warning ("NA's detected")
+  }
+  if (na.rm) {
+    vec <- vec[!is.na(vec)] #run the function without present NA's
+  }
+  result <- Reduce("-", vec) #define the function
+  return (result)
+}
+
+debug(subtract_all) #flag the function for debugging when it is called
+
+subtract_all(c(1, 6, 9, 12)) #call the function
+
+undebug(subtract_all) #unflag the function for debugging
+
+
+#R21
+#define the function and its argument
+special <- function (vec){
+
+  #create an error if the input is not a vector
+  if (!is.vector(vec)){
+    stop ("Error: Input must be a vector!")
+  }
+
+  #create an empty vector
+  unique_values <- c()
+
+  #check if current value is not already present with a logical value, if true that
+  #it is not, add it to the vector unique_values
+  for (value in vec){
+    if (!(value %in% unique_values)){
+      unique_values <- c(unique_values, value)
+    }
+  }
+
+  #check if the number of unique elements in a vector is equal to the total number
+  #of elements in it
+  if (length(unique_values) == length(vec)){
+    warning ("All values are special!")
+  }
+
+  #specify the output of the function
+  return (unique_values)
+}
+
+
+#R22
+#define the function and its argument
+my_quicksort <- function (vec){
+
+  print("I tried my best to quicksort!")
+
+  #create the variables that contain the maximum and minimum values of the vector
+  max_value <- max(vec)
+  min_value <- min(vec)
+
+  #create a new vector with the desired variables in it
+  my_vector <- c(max_value, vec, min_value)
+
+  #specify the output of the function
+  return(my_vector)
+}
+
+
+#R23
+#copy code block
+grass <- "green"
+colorit <- function(color_me, grass_me) {
+  grass_me <- grass
+  color_me <- "blue"
+  grass <- "blue"
+  colorful_items = c(color_me, grass_me)
+  return(colorful_items)
+}
+
+# (a) The function returns the characters "blue" and "green"
+
+# (b) Grass will remain assigned to "green" because that is the string it was
+#assigned to in the global environment, and the fact that it was defined as blue
+#within the function does not impact it because local variables (within the
+#function) exist only in the local environment
+
+
+#R24
+rm(list=c("colorit","grass"))
+
+source("my_functions.R")
+
+# (a) The function does not work because "grass" was defined in the global
+#environment, and not within the function (local environment). By getting rid
+#of the redundant local variable "grass," and directly assigning the string to
+#grass_me, the variable is now defined within the function
+
+# (b) My fixed function inside the new .R file
+colorit <- function(color_me, grass_me) {
+  grass_me <- "green"
+  color_me <- "blue"
+  colorful_items = c(color_me, grass_me)
+  return(colorful_items)
+}
+
+#R25
+#example of interesting recursion: sum of series
+sum_series <- function(vec){
+  if(length(vec)<=1)
+  {
+    return(vec^2)
+  }
+  else
+  {
+    return(vec[1]^2+sum_series(vec[-1]))
+  }
+}
+series <- c(1:10)
+sum_series(series)
+
+#this recursion sums the squares of a series
+
+
+#Radv1
+
+library(ggplot2)
+valid_words <- readLines("words.txt")
+valid_words <- valid_words[nchar(valid_words) == 5]
+
+simulate_monkey <- function(valid_words) {
+  # Define the alphabet
+  alphabet <- letters
+  sequence_count <- 0 # Counter for the number of sequences typed
+
+  repeat {
+    # Simulate a random 5-letter sequence
+    random_sequence <- paste(sample(alphabet, 5, replace = TRUE), collapse = "")
+    sequence_count <- sequence_count + 1
+
+    # Check if the sequence is a valid word
+    if (random_sequence %in% valid_words) {
+      break # Stop if a valid word is found
+    }
+  }
+
+  return(sequence_count) # Return the number of sequences typed
+}
+
+set.seed(42) # For reproducibility
+n_simulations <- 100
+results <- numeric(n_simulations) # Store results for each simulation
+
+for (i in 1:n_simulations) {
+  results[i] <- simulate_monkey(valid_words)
+}
+
+# Print the average number of sequences
+average_sequences <- mean(results)
+print(paste("Average number of sequences typed before success:", average_sequences))
+
+library(ggplot2)
+
+# Create a data frame for the results
+results_df <- data.frame(Simulation = 1:n_simulations, Sequences = results)
+
+# Plot the distribution of sequences
+ggplot(results_df, aes(x = Sequences)) +
+  geom_histogram(binwidth = 50, color = "black", fill = "skyblue") +
+  labs(
+    title = "Distribution of Sequences Typed Before Success",
+    x = "Number of Sequences Typed",
+    y = "Frequency"
+  )
+
+#Radv2
+
+setwd("C:/Users/april/OneDrive/Documents/8 - r_course/week_3/Myfirstpackage")
+devtools::document()  # Generate documentation
+devtools::install()   # Install the package locally
+
+
+
